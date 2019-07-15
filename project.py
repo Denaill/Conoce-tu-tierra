@@ -1,52 +1,14 @@
 import MySQLdb
 import re
-from gtts import gTTS
-from playsound import playsound
-import speech_recognition as sr
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 import tkinter
 import os
 import PyPDF2
+import speech_recognition as sr
+from gtts import gTTS
+from playsound import playsound
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
-# formas de preguntar
-# listar municipios de Risaralda
-# listar departamentos de colombia
-# listar todos los municipios de colombia
-# el municipio de pereira pertenece a Risaralda
-# Risaralda es el departamento de pereira
-# cual es el departamento de cali
-
-def main():
-    str = "cuales son los municipios de RISARALDA"
-    listy = ""
-    query = '(cuales son| listar| liste| diga) (.*) (municipios|ciudades)(.+)(de|del) (?P<place>.*)'
-    busquedad = re.search(query, str)
-    if busquedad:
-        print (busquedad.group('place'))
-        listy = (busquedad.group('place'))
-    else:
-        print ("error")
-    
-    db = MySQLdb.connect("127.0.0.1","root","","colombia")
-    cursor = db.cursor()
-    
-    consulta = "SELECT id_departamento FROM departamentos WHERE departamento ='%s'"%(listy)
-    print (consulta)
-    
-    cursor.execute(consulta)
-    resultados = cursor.fetchall()
-    id_departamento = 0
-    for registro in resultados:
-        id_departamento = registro[0]
-        print ("codDepartamento=%i"%(id_departamento))
-    
-    sql = "SELECT municipio FROM municipios WHERE departamento_id = %d"%(id_departamento)
-    cursor.execute(sql)
-    resultados = cursor.fetchall()
-    for registro in resultados:
-        nombre = registro[0]
-        print ("nombre=%s"%(nombre))
 
 def preguntar(pregunta):
     db = MySQLdb.connect("127.0.0.1","root","","colombia")
@@ -163,7 +125,7 @@ def escribiendo():
 def ayuda():
     os.popen('Documentos\Ayuda.pdf')
 
-
+#VENTANA DE TKINTER
 ventana = tkinter.Tk()
 ventana.geometry('705x370')
 ventana.title('Conoce tu tierra')
@@ -194,4 +156,6 @@ entrada.pack(ipadx=29,ipady=3)
 grabar.place(x=70,y=230)
 escribir.place(x=505,y=230)
 entrada.place(x=507,y=200)
+
+
 ventana.mainloop()
